@@ -1,0 +1,5 @@
+# Ignoring PyCharm files
+/.idea
+
+# Ignoring virtualenv
+/env
