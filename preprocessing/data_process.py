@@ -6,9 +6,9 @@ import pandas as pd
 
 class DataProcessor(object):
 
-    def __init__(self, test_size=0.1, csv_path=None, sql_source='BISandboxWrite.dbo.ZB_ChatTranscripts',
-                 max_length=40, feature_col='Client', target_col='QLTM', buffer_size=20000, batch_size=64,
-                 server='DWDiscovery'):
+    def __init__(self, test_size=0.1, csv_path=None, sql_source='',
+                 max_length=40, feature_col='', target_col='', buffer_size=20000, batch_size=64,
+                 server=''):
         """
         :param test_size: The % of data to withhold for the test set
         :param csv_path: The path of the DataFrame to use. If None, queries the sql_source
