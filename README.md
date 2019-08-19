@@ -19,13 +19,9 @@ and even XLNet if you're brave enough. All that you would need to adjust is the 
 <hr>
 
 ## How to install
-To install, either clone this repository to your local machine, and run 
-*   `python -m setup.py install`
+`pip install transformer-model`
 
-Or, you can install it directly from our Enterprise Github server with the following:
-*   `pip install git+https://github.com/zbloss/TransformerModel#egg=TransformerModel` 
-
-Either way, I highly recommend creating a new virtual environment for you project as this package does require
+I highly recommend creating a new virtual environment for you project as this package does require
 Tensorflow 2.0 which as of now is still in beta.
 
 #### GPU
