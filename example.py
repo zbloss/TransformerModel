@@ -1,9 +1,9 @@
 import tensorflow as tf
 from datetime import datetime
-from training.training import Trainer
-from transformer.transformer import Transformer
-from preprocessing.data_process import DataProcessor
-from lr_scheduler.custom_scheduler import CustomSchedule
+from transformer_model.training import Trainer
+from transformer_model.transformer import Transformer
+from transformer_model.data_process import DataProcessor
+from transformer_model.custom_scheduler import CustomSchedule
 
 
 # Data Processing
