@@ -3,3 +3,7 @@
 
 # Ignoring virtualenv
 /env
+
+# Pychache
+__pycache__
+.pyc*

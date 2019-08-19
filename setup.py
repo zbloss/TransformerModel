@@ -13,12 +13,12 @@ setup(
     description='A Transformer model implementation in TensorFlow 2.0',
     python_requires='>=3.5',
     install_requires=[
-        'matplotlib==3.1.1',
+        'matplotlib',
         'numpy',
         'pandas',
         'pyodbc',
-        'tensorflow-datasets==1.1.0',
-        'tensorflow==2.0.0b1'
+        'tensorflow-datasets>=1.1.0',
+        'tensorflow>=2.0.0b1'
     ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',

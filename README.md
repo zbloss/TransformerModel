@@ -41,9 +41,9 @@ The common use case with this model is for language translation. In that case, y
 column being the original language and the target column being the language you want to translate to.
 
 <b>1. Generate your input/output.</b>   
-   *   I have provided a few helper functions for this, but you essentially need to generate two Tensorflow tokenizers
+*   I have provided a few helper functions for this, but you essentially need to generate two Tensorflow tokenizers
 as well as a pandas DataFrame with feature and target columns. 
-    *   You can utilize the helper functions in the DataProcess class to generate TensorDatasets from your DataFrame,
+*   You can utilize the helper functions in the DataProcess class to generate TensorDatasets from your DataFrame,
     as well as perform a train_test_split.
     
 <b>2. Learning Rate / Optimizer</b>
