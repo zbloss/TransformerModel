@@ -5,5 +5,12 @@
 /env
 
 # Pychache
-__pycache__
+attention/__pycache__
+decoder/__pycache__
+encoder/__pycache__
+lr_scheduler/__pycache__
+masker/__pycache__
+positional_encoder/__pycache__
+preprocessing/__pycache__
+training/__pycache__
 .pyc*
