@@ -1,5 +1,5 @@
 import tensorflow as tf
-from transformer_model.encoder import EncoderLayer
+from transformer_model.encoder_layer import EncoderLayer
 from transformer_model.positional_encoder import PositionalEncoder
 
 
