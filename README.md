@@ -12,7 +12,6 @@ and even XLNet if you're brave enough. All that you would need to adjust is the 
 * `matplotlib`
 * `numpy`
 * `pandas`
-* `pyodbc`
 * `tensorflow-datasets>=1.1.0`
 * `tensorflow>=2.0.0b1`
 

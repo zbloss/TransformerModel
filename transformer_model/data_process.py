@@ -1,46 +1,33 @@
 import tensorflow_datasets as tfds
 import tensorflow as tf
-import pyodbc
 import pandas as pd
 
 
 class DataProcessor(object):
 
-    def __init__(self, test_size=0.1, csv_path=None, sql_source='',
-                 max_length=40, feature_col='', target_col='', buffer_size=20000, batch_size=64,
-                 server=''):
+    def __init__(self, test_size=0.1, csv_path=None,
+                 max_length=40, feature_col='', target_col='', buffer_size=20000, batch_size=64):
         """
         :param test_size: The % of data to withhold for the test set
-        :param csv_path: The path of the DataFrame to use. If None, queries the sql_source
-        :param sql_source: The table to pull the DataFrame from
+        :param csv_path: The path of the DataFrame to use.
         :param feature_col: The column name of your feature input. (Defaults to the first column)
         :param target_col:  The column name of your target input. (Defaults ot the second column)
         :param max_length: Maximum number of words per input you want to use for the training set.
         """
         self.test_size = test_size
         self.csv_path = csv_path
-        self.sql_source = sql_source
         self.feature_col = feature_col
         self.target_col = target_col
         self.max_length = max_length
         self.buffer_size = buffer_size
         self.batch_size = batch_size
 
-        self.server = server
-        self.SQL_SERVER = 'SQL Server'
-        self.cnxn = pyodbc.connect(f'DRIVER={self.SQL_SERVER}; SERVER={self.server}; Trusted_Connection=yes')
-
     def load_data(self):
         """
         :return: Loads and returns the data in a DataFrame.
         """
-        if self.csv_path is None:
-            df = pd.read_sql(f'SELECT * FROM {self.sql_source}', con=self.cnxn)
-            # inst = s.sqlConnect()
-            # df = inst.script_to_df(f'SELECT * FROM {self.sql_source}')
-            df.dropna(inplace=True)
-        else:
-            df = pd.read_csv(self.csv_path)
+        df = pd.read_csv(self.csv_path)
+        df.dropna(inplace=True)
 
         return df
 
