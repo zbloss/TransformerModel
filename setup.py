@@ -5,7 +5,7 @@ setup(
     version='1.1.0',
     packages=find_packages(exclude=['env']),
     url='https://github.com/zbloss/TransformerModel',
-    download_url='https://github.com/zbloss/TransformerModel/archive/v1.0.0.tar.gz',
+    download_url='https://github.com/zbloss/TransformerModel/archive/v1.0.1.tar.gz',
     keywords=['Transformer', 'seq2seq', 'SelfAttention'],
     license='mit',
     author='Zachary Bloss',
