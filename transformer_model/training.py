@@ -202,7 +202,7 @@ class Trainer(object):
             test_acc_hist[epoch] = self.test_accuracy.result()
 
             template = f'Epoch {epoch + 1} | Loss: {self.train_loss.result()} | Accuracy: {self.train_accuracy.result() * 100}'
-            template += f'\nTest Loss: {self.test_loss.result()} | Test Accuracy: {self.test_accuracy.result()*100)}'
+            template += f'\nTest Loss: {self.test_loss.result()} | Test Accuracy: {self.test_accuracy.result() * 100}'
             template += f'\nTime taken: {time.time() - start}'
             print(template)
         self.train_loss.reset_states()
