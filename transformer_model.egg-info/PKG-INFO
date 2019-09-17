@@ -1,12 +1,12 @@
 Metadata-Version: 1.2
 Name: transformer-model
-Version: 1.4.0
+Version: 1.5.0
 Summary: A Transformer model implementation in TensorFlow 2.0
 Home-page: https://github.com/zbloss/TransformerModel
 Author: Zachary Bloss
 Author-email: zacharybloss@gmail.com
 License: mit
-Download-URL: https://github.com/zbloss/TransformerModel/archive/1.4.0.tar.gz
+Download-URL: https://github.com/zbloss/TransformerModel/archive/1.5.0.tar.gz
 Description: UNKNOWN
 Keywords: Transformer,seq2seq,SelfAttention
 Platform: UNKNOWN

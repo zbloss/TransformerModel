@@ -54,6 +54,7 @@ class Trainer(object):
         self.test_loss = test_loss
         self.test_accuracy = test_accuracy
 
+        self.use_tensorboard = use_tensorboard
         current_time = datetime.now().strftime("%Y%m%d-%H%M%S")
 
         if use_tensorboard:
