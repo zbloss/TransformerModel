@@ -14,6 +14,7 @@ transformer_model/masker.py
 transformer_model/positional_encoder.py
 transformer_model/training.py
 transformer_model/transformer.py
+transformer_model/transformer_xl.py
 transformer_model.egg-info/PKG-INFO
 transformer_model.egg-info/SOURCES.txt
 transformer_model.egg-info/dependency_links.txt

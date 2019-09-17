@@ -1,4 +1,5 @@
 import time
+from datetime import datetime
 from transformer_model.masker import Masker
 import tensorflow as tf
 
@@ -10,7 +11,10 @@ class Trainer(object):
                  train_loss=tf.keras.metrics.Mean(name='train_loss'),
                  train_accuracy=tf.keras.metrics.SparseCategoricalCrossentropy(name='train_accuracy'),
                  checkpoint_path='./models/checkpoints/',
-                 max_to_keep=5
+                 max_to_keep=5, test_loss=tf.keras.metrics.Mean(name='test_loss'),
+                 test_accuracy=tf.keras.metrics.SparseCategoricalCrossentropy(name='test_accuracy'),
+                 use_tensorboard=True,
+                 tb_log_dir='./logs/gradient_tape/'
                  ):
         """
         :param transformer: Instance of Transformer Class
@@ -25,6 +29,9 @@ class Trainer(object):
         :param train_accuracy: training accuracy object
         :param checkpoint_path: the location of where the checkpoints are stored
         :param max_to_keep: maximum number of checkpoints to keep at a time
+        :param use_tensorboard: Bool to decide whether you want to utilize TensorBoard logging or not
+        :param tb_log_dir: Directory to store TensorBoard Logs in
+
         """
         self.train_dataset = train_dataset
         self.test_dataset = test_dataset
@@ -44,13 +51,25 @@ class Trainer(object):
         self.max_to_keep = max_to_keep
         self.ckpt_manager = tf.train.CheckpointManager(self.ckpt, self.checkpoint_path, self.max_to_keep)
 
+        self.test_loss = test_loss
+        self.test_accuracy = test_accuracy
+
+        current_time = datetime.now().strftime("%Y%m%d-%H%M%S")
+
+        if use_tensorboard:
+            self.train_log_dir = tb_log_dir + current_time + '/train'
+            self.test_log_dir = tb_log_dir + current_time + '/test'
+
+            self.train_summary_writer = tf.summary.create_file_writer(self.train_log_dir)
+            self.test_summary_writer = tf.summary.create_file_writer(self.test_log_dir)
+
         if load_ckpt:
             print('Attempting to load latest checkpoint...')
             if self.ckpt_manager.latest_checkpoint:
                 self.ckpt.restore(self.ckpt_manager.latest_checkpoint)
                 print('Latest Checkpoint Restored!!!')
             else:
-                print(f'No checkpoint found...')
+                print('No checkpoint found...')
                 print('Training from scratch')
                 pass
         else:
@@ -112,9 +131,33 @@ class Trainer(object):
         self.train_loss(loss)
         self.train_accuracy(tar_real, predictions)
 
+    @tf.function(input_signature=[
+        tf.TensorSpec(shape=(None, None), dtype=tf.int64),
+        tf.TensorSpec(shape=(None, None), dtype=tf.int64),
+    ])
+    def test_step(self, inp, tar):
+        tar_inp = tar[:, :-1]
+        tar_real = tar[:, 1:]
+
+        enc_padding_mask, combined_mask, dec_padding_mask = self.mskr.create_masks(inp, tar_inp)
+
+        predictions, _ = self.transformer(inp, tar_inp,
+                                          True,
+                                          enc_padding_mask,
+                                          combined_mask,
+                                          dec_padding_mask)
+        loss = self.loss_function(tar_real, predictions)
+
+        self.test_loss(loss)
+        self.test_accuracy(tar_real, predictions)
+
     def train(self):
         loss_hist = {}
         acc_hist = {}
+
+        test_loss_hist = {}
+        test_acc_hist = {}
+
         for epoch in range(self.epochs):
             start = time.time()
 
@@ -124,11 +167,26 @@ class Trainer(object):
             # inp -> client, tar -> qltm
             for (batch, (inp, tar)) in enumerate(self.train_dataset):
                 self.train_step(inp, tar)
+            if self.use_tensorboard:
+                with self.train_summary_writer.as_default():
+                    tf.summary.scalar('loss', self.train_loss.result(), step=epoch)
+                    tf.summary.scalar('accuracy', self.train_accuracy.result(), step=epoch)
 
+                '''
                 if batch % 50 == 0:
                     print('Epoch {} Batch {} Loss {:.4f} Accuracy {:.4f}'.format(
                         epoch + 1, batch, self.train_loss.result(), self.train_accuracy.result()))
+                '''
 
+            # inp -> client, tar -> qltm
+            for (batch, (inp, tar)) in enumerate(self.test_dataset):
+                self.test_step(inp, tar)
+            if self.use_tensorboard:
+                with self.test_summary_writer.as_default():
+                    tf.summary.scalar('test_loss', self.test_loss.result(), step=epoch)
+                    tf.summary.scalar('test_accuracy', self.test_accuracy.result(), step=epoch)
+
+            '''
             if (epoch + 1) % 5 == 0:
                 ckpt_save_path = self.ckpt_manager.save()
                 print('Saving checkpoint for epoch {} at {}'.format(epoch + 1,
@@ -137,9 +195,19 @@ class Trainer(object):
             print('Epoch {} Loss {:.4f} Accuracy {:.4f}'.format(epoch + 1,
                                                                 self.train_loss.result(),
                                                                 self.train_accuracy.result()))
+            '''
             loss_hist[epoch] = self.train_loss.result()
             acc_hist[epoch] = self.train_accuracy.result()
+            test_loss_hist[epoch] = self.test_loss.result()
+            test_acc_hist[epoch] = self.test_accuracy.result()
 
-            print('Time taken for 1 epoch: {} secs\n'.format(time.time() - start))
+            template = f'Epoch {epoch + 1} | Loss: {self.train_loss.result()} | Accuracy: {self.train_accuracy.result() * 100}'
+            template += f'\nTest Loss: {self.test_loss.result()} | Test Accuracy: {self.test_accuracy.result()*100)}'
+            template += f'\nTime taken: {time.time() - start}'
+            print(template)
+        self.train_loss.reset_states()
+        self.test_loss.reset_states()
+        self.train_accuracy.reset_states()
+        self.test_accuracy.reset_states()
 
-        return loss_hist, acc_hist
+        return loss_hist, acc_hist, test_loss_hist, test_acc_hist
