@@ -2,10 +2,10 @@ from setuptools import setup, find_packages
 
 setup(
     name='transformer_model',
-    version='1.4.0',
+    version='1.5.0',
     packages=find_packages(exclude=['env']),
     url='https://github.com/zbloss/TransformerModel',
-    download_url='https://github.com/zbloss/TransformerModel/archive/1.4.0.tar.gz',
+    download_url='https://github.com/zbloss/TransformerModel/archive/1.5.0.tar.gz',
     keywords=['Transformer', 'seq2seq', 'SelfAttention'],
     license='mit',
     author='Zachary Bloss',
