@@ -25,7 +25,7 @@ Tensorflow 2.0 which as of now is still in beta.
 
 #### GPU
 You can utilize your GPU by installing the gpu version of Tensorflow 2.0
-    `pip install tensorflow-gpu==2.0.0b1`
+    `pip install tensorflow-gpu==2.0.0rc1`
 <hr>
 
 ## How to use
